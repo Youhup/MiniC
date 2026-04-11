@@ -3,14 +3,20 @@
  */
 package fr.n7.stl.minic.ast.instruction;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import fr.n7.stl.minic.ast.SemanticsUndefinedException;
 import fr.n7.stl.minic.ast.expression.Expression;
 import fr.n7.stl.minic.ast.instruction.declaration.FunctionDeclaration;
 import fr.n7.stl.minic.ast.scope.Declaration;
 import fr.n7.stl.minic.ast.scope.HierarchicalScope;
+import fr.n7.stl.minic.ast.type.AtomicType;
+import fr.n7.stl.minic.ast.type.Type;
 import fr.n7.stl.tam.ast.Fragment;
+import fr.n7.stl.tam.ast.Library;
 import fr.n7.stl.tam.ast.Register;
 import fr.n7.stl.tam.ast.TAMFactory;
+import fr.n7.stl.tam.ast.TAMInstruction;
 
 /**
  * Implementation of the Abstract Syntax Tree node for a printer instruction.
@@ -38,7 +44,7 @@ public class Printer implements Instruction {
 	 */
 	@Override
 	public boolean collectAndPartialResolve(HierarchicalScope<Declaration> _scope) {
-		throw new SemanticsUndefinedException( "Semantics collect is undefined in Printer.");
+		return this.parameter.collectAndPartialResolve(_scope);
 	}
 	
 	@Override
@@ -51,7 +57,7 @@ public class Printer implements Instruction {
 	 */
 	@Override
 	public boolean completeResolve(HierarchicalScope<Declaration> _scope) {
-		throw new SemanticsUndefinedException( "Semantics resolve is undefined in Printer.");
+		return this.parameter.completeResolve(_scope);
 	}
 
 	/* (non-Javadoc)
@@ -59,7 +65,12 @@ public class Printer implements Instruction {
 	 */
 	@Override
 	public boolean checkType() {
-		throw new SemanticsUndefinedException("Semantics checkType undefined in Printer.");
+		Type parametreType = this.parameter.getType();
+		boolean ok = parametreType.equalsTo(AtomicType.BooleanType) || 
+					parametreType.equalsTo(AtomicType.IntegerType) ||
+					parametreType.equalsTo(AtomicType.CharacterType) ||
+					parametreType.equalsTo(AtomicType.StringType);
+		return ok;
 	}
 
 	/* (non-Javadoc)
@@ -67,7 +78,7 @@ public class Printer implements Instruction {
 	 */
 	@Override
 	public int allocateMemory(Register _register, int _offset) {
-		throw new SemanticsUndefinedException("Semantics allocateMemory undefined in Printer.");
+		return _offset;
 	}
 
 	/* (non-Javadoc)
@@ -75,7 +86,18 @@ public class Printer implements Instruction {
 	 */
 	@Override
 	public Fragment getCode(TAMFactory _factory) {
-		throw new SemanticsUndefinedException("Semantics getCode undefined in Printer.");
+		Fragment fragment = _factory.createFragment();
+		fragment.append(this.parameter.getCode(_factory));
+		Type typeParametre = this.parameter.getType();
+		if (typeParametre.equalsTo(AtomicType.IntegerType)){
+			fragment.add(Library.IOut);
+
+		}
+	
+
+		
+		return fragment;
 	}
 
 }
+
