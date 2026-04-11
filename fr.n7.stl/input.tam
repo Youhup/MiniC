@@ -1,0 +1,11 @@
+LOADL 0
+STORE (1) 0[SB]
+;fr.n7.stl.minic.ast.expression.accessible.VariableAccess@4fccd51b
+;(i == 0)
+LOAD (1) 0[SB]
+LOADL 0
+SUBR IEq
+JUMPIF (0) fin_1
+fin_1
+HALT
+
