@@ -1,0 +1,15 @@
+PUSH 2
+LOADL 2
+STORE (1) 0[SB]
+
+LOAD (1) 0[SB]
+LOAD (1) 0[SB]
+SUBR IEq
+STORE (1) 1[SB]
+LOAD (1) 1[SB]
+
+SUBR IOut
+LOAD (1) 0[SB]
+SUBR IOut
+
+HALT

@@ -1,0 +1,3 @@
+Il reste le cas de void function , c'est a dire sans un return explicit
+Mais dans ce cas , on ne peut pas l'appeler dans la main , car il ne s'agit pas d'une instruction valid.
+Les pointeurs sont termines.
