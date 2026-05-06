@@ -41,7 +41,10 @@ public class FieldAccess extends AbstractField<AccessibleExpression> implements 
 		t = ((NamedType) t).getType();
 		RecordType rT = (RecordType) t;
 		FieldDeclaration f = (FieldDeclaration) rT.get(name);
-		fragment.add(_factory.createLoadL(f.getOffset()));
+		int sizePop = this.record.getType().length() - f.getOffset() - f.getType().length();
+		fragment.add(_factory.createPop(0,sizePop));
+		int fieldsize =  f.getType().length();
+		fragment.add(_factory.createPop(fieldsize,f.getOffset()));
 		return fragment;
 	}
 

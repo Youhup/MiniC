@@ -6,6 +6,7 @@ import fr.n7.stl.minic.ast.scope.HierarchicalScope;
 import fr.n7.stl.minic.ast.type.NamedType;
 import fr.n7.stl.minic.ast.type.RecordType;
 import fr.n7.stl.minic.ast.type.Type;
+import fr.n7.stl.minic.ast.type.AtomicType;
 import fr.n7.stl.minic.ast.type.declaration.FieldDeclaration;
 import fr.n7.stl.util.Logger;
 
@@ -70,7 +71,7 @@ public abstract class AbstractField<RecordKind extends Expression> implements Ex
 				this.field = rT.get(name);
 				return true;
 			} else {
-				Logger.error("Pas de field avec le nom" + this.name);
+				Logger.error("Pas de field avec le nom " + this.name);
 				return false;
 			}
 
@@ -86,6 +87,7 @@ public abstract class AbstractField<RecordKind extends Expression> implements Ex
 	 * @return Synthesized Type of the expression.
 	 */
 	public Type getType() {
+		//return AtomicType.IntegerType;
 		return this.field.getType();
 	}
 

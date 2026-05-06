@@ -5,7 +5,12 @@ package fr.n7.stl.minic.ast.expression.assignable;
 
 import fr.n7.stl.minic.ast.SemanticsUndefinedException;
 import fr.n7.stl.minic.ast.expression.AbstractField;
+import fr.n7.stl.minic.ast.type.NamedType;
+import fr.n7.stl.minic.ast.type.RecordType;
+import fr.n7.stl.minic.ast.type.Type;
+import fr.n7.stl.minic.ast.type.declaration.FieldDeclaration;
 import fr.n7.stl.tam.ast.Fragment;
+import fr.n7.stl.tam.ast.Library;
 import fr.n7.stl.tam.ast.TAMFactory;
 
 /**
@@ -29,7 +34,16 @@ public class FieldAssignment extends AbstractField<AssignableExpression> impleme
 	 */
 	@Override
 	public Fragment getCode(TAMFactory _factory) {
-		throw new SemanticsUndefinedException("Semantics getCode undefined in FieldAssignment.");
+		Fragment fragment = _factory.createFragment();
+		fragment.append(this.record.getCode(_factory));
+		
+		Type t = record.getType();
+		t = ((NamedType) t).getType();
+		RecordType rT = (RecordType) t;
+		FieldDeclaration f = (FieldDeclaration) rT.get(name);
+		fragment.add(_factory.createLoadL(f.getOffset()));
+		fragment.add(Library.IAdd);
+		return fragment;
 	}
 	
 }
