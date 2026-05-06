@@ -1,3 +1,7 @@
 Il reste le cas de void function , c'est a dire sans un return explicit
 Mais dans ce cas , on ne peut pas l'appeler dans la main , car il ne s'agit pas d'une instruction valid.
 Les pointeurs sont termines.
+Array , reste des choses a completer array access et assignement , initialisation statique
+
+pour sequence le probleme , c'est avec l'implementation actuelle , j'arrive pas a determiner l'adresse de la premiere valeur de la sequence .
+java -jar tools/runtam.jar input.tam

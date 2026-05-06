@@ -69,7 +69,37 @@ public class RecordType implements Type, Declaration, Scope<FieldDeclaration> {
 	 */
 	@Override
 	public boolean equalsTo(Type _other) {
-		throw new SemanticsUndefinedException( "compatibleWith is undefined in RecordType.");
+		if (_other instanceof RecordType) {
+			RecordType _local = (RecordType) _other;
+			if (this.fields.size() == _local.fields.size()) {
+				Iterator<FieldDeclaration> i1 = this.fields.iterator();
+				Iterator<FieldDeclaration> i2 = _local.fields.iterator();
+				boolean _result = true;
+				while (i1.hasNext() && i2.hasNext() && _result) {
+					_result = _result && (i1.next().getType().equalsTo(i2.next().getType()));
+				}
+				return _result;
+			} else {
+				return false;
+			}
+		} else {
+				if (_other instanceof SequenceType) {
+					SequenceType _local = (SequenceType) _other;
+					return this.erase().equalsTo((_local));
+				} else {
+					if (_other instanceof CoupleType) {
+						if (this.fields.size() == 2) {
+							return this.fields.get(0).getType().equalsTo(((CoupleType)_other).getFirst()) &&
+									this.fields.get(1).getType().equalsTo(((CoupleType)_other).getSecond());
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
+			}
+		
 	}
 
 	/* (non-Javadoc)
@@ -77,7 +107,40 @@ public class RecordType implements Type, Declaration, Scope<FieldDeclaration> {
 	 */
 	@Override
 	public boolean compatibleWith(Type _other) {
-		throw new SemanticsUndefinedException( "compatibleWith is undefined in RecordType.");
+		if (_other instanceof NamedType) {
+			return this.compatibleWith(((NamedType) _other).getType());
+		} else {
+			if (_other instanceof RecordType) {
+			RecordType _local = (RecordType) _other;
+			if (this.fields.size() == _local.fields.size()) {
+				Iterator<FieldDeclaration> i1 = this.fields.iterator();
+				Iterator<FieldDeclaration> i2 = _local.fields.iterator();
+				boolean _result = true;
+				while (i1.hasNext() && i2.hasNext() && _result) {
+					_result = _result && (i1.next().getType().compatibleWith(i2.next().getType()));
+				}
+				return _result;
+			} else {
+				return false;
+			}
+		} else {
+				if (_other instanceof SequenceType) {
+					SequenceType _local = (SequenceType) _other;
+					return this.erase().compatibleWith((_local));
+				} else {
+					if (_other instanceof CoupleType) {
+						if (this.fields.size() == 2) {
+							return this.fields.get(0).getType().compatibleWith(((CoupleType)_other).getFirst()) &&
+									this.fields.get(1).getType().compatibleWith(((CoupleType)_other).getSecond());
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +148,12 @@ public class RecordType implements Type, Declaration, Scope<FieldDeclaration> {
 	 */
 	@Override
 	public Type merge(Type _other) {
-		throw new SemanticsUndefinedException( "compatibleWith is undefined in RecordType.");
+		if (this.equalsTo(_other)) {
+			return this;
+		}else {
+			return AtomicType.ErrorType;
+		}
+			
 	}
 
 	/* (non-Javadoc)

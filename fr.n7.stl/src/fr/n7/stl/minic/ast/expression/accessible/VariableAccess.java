@@ -6,8 +6,10 @@ package fr.n7.stl.minic.ast.expression.accessible;
 import fr.n7.stl.minic.ast.expression.AbstractAccess;
 import fr.n7.stl.minic.ast.instruction.declaration.VariableDeclaration;
 import fr.n7.stl.minic.ast.scope.Declaration;
+import fr.n7.stl.minic.ast.type.RecordType;
 import fr.n7.stl.tam.ast.Fragment;
 import fr.n7.stl.tam.ast.TAMFactory;
+import fr.n7.stl.minic.ast.type.RecordType;
 
 /**
  * Implementation of the Abstract Syntax Tree node for a variable access expression.
@@ -37,10 +39,16 @@ public class VariableAccess extends AbstractAccess {
 	 */
 	public Fragment getCode(TAMFactory _factory) {
 		Fragment _result = _factory.createFragment();
-		_result.add(_factory.createLoad(
+		if (this.declaration.getType().equalsTo(RecordType) ) {
+			_result.add(_factory.createLoadA(
 				this.declaration.getRegister(), 
-				this.declaration.getOffset(),
-				this.declaration.getType().length()));
+				this.declaration.getOffset()));
+		}else {
+			_result.add(_factory.createLoad(
+					this.declaration.getRegister(), 
+					this.declaration.getOffset(),
+					this.declaration.getType().length()));
+		}
 		//_result.addComment(this.toString());
 		return _result;
 	}

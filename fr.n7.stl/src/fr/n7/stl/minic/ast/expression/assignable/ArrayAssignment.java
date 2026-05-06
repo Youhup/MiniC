@@ -8,6 +8,7 @@ import fr.n7.stl.minic.ast.expression.AbstractArray;
 import fr.n7.stl.minic.ast.expression.Expression;
 import fr.n7.stl.minic.ast.expression.accessible.AccessibleExpression;
 import fr.n7.stl.tam.ast.Fragment;
+import fr.n7.stl.tam.ast.Library;
 import fr.n7.stl.tam.ast.TAMFactory;
 
 /**
@@ -30,7 +31,13 @@ public class ArrayAssignment extends AbstractArray<AssignableExpression> impleme
 	 */
 	@Override
 	public Fragment getCode(TAMFactory _factory) {
-		throw new SemanticsUndefinedException("Semantics getCode undefined in ArrayAssignment.");
+		Fragment fragment = _factory.createFragment();
+		fragment.append(this.array.getCode(_factory));
+		fragment.add(_factory.createLoadI(1));
+		fragment.append(this.index.getCode(_factory));
+		fragment.add(Library.IAdd);
+		//fragment.add(_factory.createStoreI(this.getType().length()));
+		return fragment;
 	}
 
 	

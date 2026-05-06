@@ -13,6 +13,7 @@ import fr.n7.stl.minic.ast.scope.HierarchicalScope;
 import fr.n7.stl.minic.ast.type.SequenceType;
 import fr.n7.stl.minic.ast.type.Type;
 import fr.n7.stl.tam.ast.Fragment;
+import fr.n7.stl.tam.ast.Library;
 import fr.n7.stl.tam.ast.TAMFactory;
 
 /**
@@ -93,7 +94,17 @@ public class Sequence implements AccessibleExpression {
 	 */
 	@Override
 	public Fragment getCode(TAMFactory _factory) {
-		throw new SemanticsUndefinedException("Semantics getCode undefined in Sequence.");
+		Fragment fragment = _factory.createFragment();
+		
+		
+		for (Expression value : this.values) {
+			fragment.append(value.getCode(_factory));
+			
+		}
+		
+
+		
+		return fragment;
 	}
 
 }

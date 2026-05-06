@@ -161,7 +161,7 @@ public class VariableDeclaration implements DeclarationInstruction {
 	@Override
 	public Fragment getCode(TAMFactory _factory) {
 		Fragment fragment = _factory.createFragment();
-		fragment.add(_factory.createPush(this.value.getType().length()));
+		fragment.add(_factory.createPush(this.type.length()));
 		fragment.append(this.value.getCode(_factory));
 		fragment.add(_factory.createStore(this.register, this.offset, this.type.length()));
 		return fragment;

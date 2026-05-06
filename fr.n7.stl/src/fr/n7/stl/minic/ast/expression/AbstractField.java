@@ -3,8 +3,11 @@ package fr.n7.stl.minic.ast.expression;
 import fr.n7.stl.minic.ast.SemanticsUndefinedException;
 import fr.n7.stl.minic.ast.scope.Declaration;
 import fr.n7.stl.minic.ast.scope.HierarchicalScope;
+import fr.n7.stl.minic.ast.type.NamedType;
+import fr.n7.stl.minic.ast.type.RecordType;
 import fr.n7.stl.minic.ast.type.Type;
 import fr.n7.stl.minic.ast.type.declaration.FieldDeclaration;
+import fr.n7.stl.util.Logger;
 
 /**
  * Common elements between left (Assignable) and right (Expression) end sides of assignments. These elements
@@ -41,7 +44,7 @@ public abstract class AbstractField<RecordKind extends Expression> implements Ex
 	 */
 	@Override
 	public boolean collectAndPartialResolve(HierarchicalScope<Declaration> _scope) {
-		throw new SemanticsUndefinedException( "collect is undefined in AbstractField.");
+		return this.record.collectAndPartialResolve(_scope);
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +52,33 @@ public abstract class AbstractField<RecordKind extends Expression> implements Ex
 	 */
 	@Override
 	public boolean completeResolve(HierarchicalScope<Declaration> _scope) {
-		throw new SemanticsUndefinedException( "resolve is undefined in AbstractField.");
+		if (this.record.completeResolve(_scope)){
+			Type t = record.getType();
+			if (t instanceof NamedType) {
+				t = ((NamedType) t).getType();
+			}
+			
+			if (!(t instanceof RecordType)) {
+				Logger.error("Expression " + this.record + " is not a record type.");
+				return false;
+			}
+        
+        	RecordType rT = (RecordType) t;
+			
+			
+			if (rT.contains(this.name)){
+				this.field = rT.get(name);
+				return true;
+			} else {
+				Logger.error("Pas de field avec le nom" + this.name);
+				return false;
+			}
+
+		}else {
+			Logger.error("Record non resolu");
+			return false;
+
+		}
 	}
 
 	/**
@@ -57,7 +86,7 @@ public abstract class AbstractField<RecordKind extends Expression> implements Ex
 	 * @return Synthesized Type of the expression.
 	 */
 	public Type getType() {
-		throw new SemanticsUndefinedException( "getType is undefined in FieldAccess.");
+		return this.field.getType();
 	}
 
 }

@@ -8,6 +8,11 @@ import fr.n7.stl.minic.ast.expression.AbstractField;
 import fr.n7.stl.minic.ast.expression.Expression;
 import fr.n7.stl.tam.ast.Fragment;
 import fr.n7.stl.tam.ast.TAMFactory;
+import fr.n7.stl.minic.ast.type.NamedType;
+import fr.n7.stl.minic.ast.type.RecordType;
+import fr.n7.stl.minic.ast.type.Type;
+import fr.n7.stl.minic.ast.type.declaration.FieldDeclaration;
+
 
 /**
  * Implementation of the Abstract Syntax Tree node for accessing a field in a record.
@@ -30,7 +35,15 @@ public class FieldAccess extends AbstractField<AccessibleExpression> implements 
 	 */
 	@Override
 	public Fragment getCode(TAMFactory _factory) {
-		throw new SemanticsUndefinedException( "getCode is undefined in FieldAccess.");
+		Fragment fragment = _factory.createFragment();
+		fragment.append(this.record.getCode(_factory));
+		Type t = record.getType();
+		t = ((NamedType) t).getType();
+		RecordType rT = (RecordType) t;
+		FieldDeclaration f = (FieldDeclaration) rT.get(name);
+		fragment.add(_factory.createLoadL(f.getOffset()));
+		return fragment;
 	}
 
 }
+
